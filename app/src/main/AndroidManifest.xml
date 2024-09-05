@@ -1,30 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".NotificationDetailActivity"></activity>
+        android:theme="@style/Theme.AndroidNoteApp"
+        tools:ignore="AllowBackup"
+        tools:targetApi="q">
         <activity
-            android:name=".SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name="com.uef.android_note_app.activities.CreateNoteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name="com.uef.android_note_app.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name="com.uef.android_note_app.activities.LoadingActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-
-        <receiver android:name=".AlarmReceiver" />
-
-        <service
-            android:name=".Music"
-            android:enabled="true" />
+        
+        <receiver android:name="com.uef.android_note_app.notification.AlertReceiver"/>
     </application>
 
 </manifest>
