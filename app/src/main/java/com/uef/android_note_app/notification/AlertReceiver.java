@@ -29,6 +29,4 @@ public class AlertReceiver extends BroadcastReceiver {
         notificationHelper.getManager().notify(Integer.parseInt(id), nb.build());
     }
 
-
-
 }

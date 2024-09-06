@@ -3,6 +3,8 @@ package com.uef.android_note_app.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -68,6 +71,18 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     private AlertDialog dialogAddURL;
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "AlarmChannel";
+            String description = "Channel for Alarm Manager";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("notifyAlarm", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             ((TextView) cell).setBackgroundColor(Color.rgb(255, 204, 51));
             ((TextView) cell).setBackgroundResource(R.drawable.rounded_button);
             ((TextView) cell).setTextColor(Color.rgb(51, 51, 51));
-
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH) + 1;
             int year = calendar.get(Calendar.YEAR);
@@ -189,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             notesAdapter.GetNotesByCategory(buttonFilterWork.getHint().toString());
             notesAdapter.notifyDataSetChanged();
         });
+        createNotificationChannel();
     }
 
     @Override

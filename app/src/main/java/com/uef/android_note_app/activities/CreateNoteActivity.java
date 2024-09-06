@@ -55,6 +55,7 @@ import com.uef.android_note_app.database.NotesDatabase;
 import com.uef.android_note_app.entities.Note;
 import com.uef.android_note_app.notification.AlertReceiver;
 import com.uef.android_note_app.notification.NotificationHelper;
+import com.uef.android_note_app.views.DatePickerFragment;
 import com.uef.android_note_app.views.TimePickerFragment;
 
 import java.io.InputStream;
@@ -142,6 +143,8 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(),"time picker");
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(),"date picker");
             }
         });
 
@@ -155,10 +158,14 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
 
         // -- end of init for alarm
 
+        // Hiển thị thời gian tạo
         textCreatedTime.setText(
-                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
-                        .format(new Date())
+                "Thời gian tạo: " +
+                        new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
+                                .format(new Date()) +
+                        "\nĐến hạn: Chưa chọn"
         );
+
 
         ImageView imageSave = findViewById(R.id.imageSave);
         imageSave.setOnClickListener(new View.OnClickListener() {
@@ -221,18 +228,33 @@ public class CreateNoteActivity extends AppCompatActivity implements AdapterView
         calendarAlarm.set(Calendar.HOUR_OF_DAY,hourOfDay);
         calendarAlarm.set(Calendar.MINUTE,minute);
         calendarAlarm.set(Calendar.SECOND,0);
-
-
         updateTimeText(calendarAlarm);
-
-
     }
-    private void updateTimeText(Calendar c){
+
+    public void onDateSet(Calendar calendar) {
+        DialogFragment timePicker = new TimePickerFragment();
+        timePicker.show(getSupportFragmentManager(), "time picker");
+        calendarAlarm = calendar; // Lưu lại ngày đã chọn
+    }
+
+
+    private void updateTimeText(Calendar c) {
+        // Định dạng ngày và giờ
         String timeText = "Thời gian báo: ";
-        selectedTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
-        textAlarm.setText(timeText+selectedTimeText);
+        String selectedDateTime = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", new Locale("vi", "VN"))
+                .format(c.getTime());
 
+        // Cập nhật TextView cho thời gian báo
+        textAlarm.setText(timeText+selectedDateTime);
+
+        // Cập nhật TextView cho thời gian tạo và đến hạn
+        String currentText = textCreatedTime.getText().toString();
+        String createdTime = currentText.split("\n")[0]; // Lấy dòng "Thời gian tạo"
+
+        textCreatedTime.setText(createdTime + "\nĐến hạn: " + selectedDateTime);
     }
+
+
 
     private void startAlarm(Calendar c, String title, String message,String id){
         startAlarmValue = Integer.parseInt(id);

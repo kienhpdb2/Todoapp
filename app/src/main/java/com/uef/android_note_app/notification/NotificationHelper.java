@@ -54,7 +54,8 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(message)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM);
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setTimeoutAfter(10000); // Thời gian thông báo hiện trên màn hình (10 giây);
 
     }
 }
